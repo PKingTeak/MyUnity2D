@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour
 
     private Camera cam;
 
+    [SerializeField]
+    private float range;
  
-    //ÇÊ¿äÇÑ°Å »óÇÏ ÁÂ¿ì ¿òÁ÷ÀÌ±â + ½Ã¼± Á¶Á¤ÇÏ±â 
+    //ï¿½Ê¿ï¿½ï¿½Ñ°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì±ï¿½ + ï¿½Ã¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ 
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -52,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
+   
 
 
 

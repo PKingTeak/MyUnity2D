@@ -7,31 +7,34 @@ public class UnitListManager : MonoBehaviour
 {
     [Range(1,10)][SerializeField] private int ListSize;
 
+    private Transform player;
 
     [SerializeField]
     List<GameObject> unitList = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindWithTag("Player").transform;
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+     
     }
 
     public void Interact(GameObject obj)
     {
-        unitList.Add(obj);
-        for (int i = 0; i < unitList.Count; i++)
+        if (!unitList.Contains(obj))
         {
-            
+            unitList.Add(obj);
+            Transform target = (unitList.Count == 1) ? player : unitList[unitList.Count - 2].transform;
+
+            obj.GetComponent<Unit>().SetFollowTarget(target);
+
+            MatchType();
         }
-        //추가를 해주고 
-        //여기서 타입 비교까지 할꺼임 
 
     }
 

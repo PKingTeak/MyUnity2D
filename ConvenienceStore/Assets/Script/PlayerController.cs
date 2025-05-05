@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.U2D;
 using UnityEngine;
 
@@ -17,12 +18,17 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float range;
- 
-    //�ʿ��Ѱ� ���� �¿� �����̱� + �ü� �����ϱ� 
+    [SerializeField]
+    private UnitListManager listManager;
+
+    private AnimationHandler anihandler;
+    
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+        listManager = GetComponent<UnitListManager>();
+        anihandler = GetComponentInChildren<AnimationHandler>();
         cam = Camera.main;    
     }
 
@@ -51,11 +57,25 @@ public class PlayerController : MonoBehaviour
 
             sprite.flipX = (horizontal < 0);
         }
-
+        anihandler.Move(movedir);
 
     }
 
-   
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (collision.CompareTag("Unit"))
+            { 
+                listManager.Interact(collision.gameObject); //��ȣ�ۿ�
+                
+            }
+        }
+    }
+
+
+
+
 
 
 

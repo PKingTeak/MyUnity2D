@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public enum UnitType 
+    public enum UnitType
     {
         Angle,
         Elf,
@@ -14,101 +12,73 @@ public class Unit : MonoBehaviour
         Dwarf,
         Lizard,
         Boom
-
     }
 
+    [Header("유닛 설정")]
     [SerializeField] private UnitType uType;
-    public UnitType UType {get{return uType;}}
-    [SerializeField] protected float moveSpeed;
-    public float MoveSpeed { get { return moveSpeed; } }
+    public UnitType UType => uType;
 
-    public GameObject target = null;
+    [SerializeField] protected float moveSpeed = 5f;
+    public float MoveSpeed => moveSpeed;
 
-    private bool IsContact = false;
-    [SerializeField]
-    private float followRange;
-    protected Vector3 Pos = Vector3.zero; //�ڱ� ��ġ 
+    [SerializeField] private float followThreshold = 1.5f; // 플레이어와의 최소 거리 (데드존 역할)
+    [SerializeField] private float followRange = 5f; // Gizmo용 시각화
 
-    protected void Follow(Transform target)
+    private Coroutine followCoroutine = null;
+    private AnimationHandler aniHandler;
+    private SpriteRenderer sprite;
+
+    private void Awake()
     {
-        if (target == null)
-        {
-            Pos = this.transform.position;
-           
-        }
-
-        
-        
-            
-        this.transform.position =  Vector3.Lerp(this.transform.position, target.position, moveSpeed * Time.deltaTime); //  a  t  b
-        
-
-    }
-    public void SetTarget(GameObject other)
-    {
-
-        target = other;
+        aniHandler = GetComponentInChildren<AnimationHandler>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
-/*
-    private bool IsRange()
+   //타겟 설정
+    public void SetFollowTarget(Transform targetTransform)
     {
-        if(target == null)
+        if (followCoroutine != null)
         {
-            return false;
-        }
-        float dx = Mathf.Abs(target.transform.position.x - this.transform.position.x);
-        float dy = Mathf.Abs(target.transform.position.y - this.transform.position.y);
-
-        float minfx = Mathf.Abs(this.transform.position.x - followRange);
-        float maxfy = Mathf.Abs(this.transform.position.y - followRange);
-        float maxfx = Mathf.Abs(this.transform.position.x + followRange);
-        float minfy = Mathf.Abs(this.transform.position.y + followRange);
-        if((minfx<=dx && maxfx>= dx) && (minfy<= dy && maxfy>=dy))
-        {
-            return true;
-            
-
-        }
-        return false;
-    }
-    */
-    private bool IsRange()
-{
-    if (target == null)
-        return false;
-
-    float distance = Vector2.Distance(transform.position, target.transform.position);
-    return distance <= followRange;
-}
-
-
-    protected void Update()
-    {
-        IsContact = IsRange();
-        if(IsContact == false && target != null)
-        {
-
-        Follow(target.transform);
+            StopCoroutine(followCoroutine);
         }
 
-        
+        followCoroutine = StartCoroutine(FollowRoutine(targetTransform));
     }
 
-    protected void OnTriggerEnter2D(Collider2D other)
+    // 일정 거리 이상일 때만 따라가며 애니메이션 적용
+    private IEnumerator FollowRoutine(Transform targetTransform)
     {
-        if(other.gameObject.CompareTag("Player"))
+        while (targetTransform != null)
         {
-            SetTarget(other.gameObject);
+            Vector3 direction = targetTransform.position - transform.position;
+            float distance = direction.magnitude;
+
+            if (distance > followThreshold)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetTransform.position, moveSpeed * Time.deltaTime);
+                aniHandler?.Move(direction);
+
+                if (sprite != null && Mathf.Abs(direction.x) > 0.01f)
+                {
+                    sprite.flipX = direction.x < 0;
+                }
+            }
+            else
+            {
+                aniHandler?.Move(Vector2.zero); // 애니메이션 멈춤
+            }
+
+            yield return null;
         }
+
+       //정지
+        aniHandler?.Move(Vector2.zero);
     }
 
-
- private void OnDrawGizmosSelected()
+    // Scene 뷰에서 범위 표시 (디버깅용)
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, followRange);
     }
-
-
 }

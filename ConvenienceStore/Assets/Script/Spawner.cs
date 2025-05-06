@@ -1,29 +1,34 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class UnitSpawner : MonoBehaviour
 {
-    [Header("¼ÒÈ¯ °¡´ÉÇÑ À¯´Ö")]
+    [Header("ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private List<GameObject> unitPrefabs;
 
-    [Header("¼ÒÈ¯ Å¸ÀÏ¸Ê")]
-    [SerializeField] private Tilemap tilemap;                 // »ç¿ëÇÒ Å¸ÀÏ¸Ê
-    [SerializeField] private TileBase spawnableTile;          // ÀÌ Å¸ÀÏ À§¿¡¼­¸¸ ¼ÒÈ¯µÊ
+    [Header("ï¿½ï¿½È¯ Å¸ï¿½Ï¸ï¿½")]
+    [SerializeField] private Tilemap tilemap;                 // ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ï¸ï¿½
+    [SerializeField] private TileBase spawnableTile;          // ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½
 
-    private List<Vector2> spawnPoints = new List<Vector2>();  // ÀÚµ¿À¸·Î ¼öÁýµÊ
+    private List<Vector2> spawnPoints = new List<Vector2>();  // ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private HashSet<Vector2> occupiedPoints = new HashSet<Vector2>();
 
     [SerializeField] private int spawnCount = 5;
+
+
+    public Tilemap Tilemap => tilemap;
 
     private void Start()
     {
         FindSpawnableTiles();
         SpawnRandomUnits();
+        StartCoroutine(AutoRespawn());
     }
 
     /// <summary>
-    /// Å¸ÀÏ¸Ê¿¡¼­ ÁöÁ¤µÈ spawnableTileÀ» Ã£°í, spawnPoints¿¡ µî·Ï
+    /// Å¸ï¿½Ï¸Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ spawnableTileï¿½ï¿½ Ã£ï¿½ï¿½, spawnPointsï¿½ï¿½ ï¿½ï¿½ï¿½
     /// </summary>
     private void FindSpawnableTiles()
     {
@@ -48,7 +53,7 @@ public class UnitSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// »ç¿ë °¡´ÉÇÑ À§Ä¡¿¡ ·£´ý À¯´Ö ¼ÒÈ¯
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     /// </summary>
     public void SpawnRandomUnits()
     {
@@ -99,4 +104,28 @@ public class UnitSpawner : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator AutoRespawn()
+    {
+        WaitForSeconds delay = new WaitForSeconds(2f);
+
+        while (true)
+        {
+            SpawnRandomUnits();
+            yield return delay;
+
+        }
+    }
+
+
+    public void UnregisterUnitByWorldPosition(Vector3 worldPosition)
+    {
+        Vector3Int cellPos = tilemap.WorldToCell(worldPosition);
+        Vector3 normalizedWorld = tilemap.CellToWorld(cellPos) + tilemap.cellSize / 2f;
+        Vector2 pos = new Vector2(normalizedWorld.x, normalizedWorld.y);
+
+        UnregisterUnit(pos);
+    }
+
+
 }

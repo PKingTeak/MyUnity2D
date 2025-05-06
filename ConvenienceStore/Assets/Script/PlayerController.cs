@@ -67,8 +67,14 @@ public class PlayerController : MonoBehaviour
         {
             if (collision.CompareTag("Unit"))
             { 
-                listManager.Interact(collision.gameObject); //»óÈ£ÀÛ¿ë
+                listManager.Interact(collision.gameObject); //ï¿½ï¿½È£ï¿½Û¿ï¿½
                 
+            }
+
+            if(collision.CompareTag("Door"))
+            {
+                collision.GetComponent<Door>().Open();
+
             }
         }
     }

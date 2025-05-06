@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Unit : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Unit : MonoBehaviour
         Boom
     }
 
+
     [Header("유닛 설정")]
     [SerializeField] private UnitType uType;
     public UnitType UType => uType;
@@ -21,6 +23,8 @@ public class Unit : MonoBehaviour
     [SerializeField] protected float moveSpeed = 5f;
     public float MoveSpeed => moveSpeed;
 
+    [SerializeField] private int unitScore;
+    public int UnitScore { get{return unitScore;} } //이걸 호출해서 사용할것이다. 
     [SerializeField] private float followThreshold = 1.5f; // 플레이어와의 최소 거리 (데드존 역할)
     [SerializeField] private float followRange = 5f; // Gizmo용 시각화
 
@@ -34,7 +38,13 @@ public class Unit : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
     }
 
-   //타겟 설정
+    private void Start()
+    {
+    
+        SettingScore(this.UType);
+    }
+
+    //타겟 설정
     public void SetFollowTarget(Transform targetTransform)
     {
         if (followCoroutine != null)
@@ -71,7 +81,7 @@ public class Unit : MonoBehaviour
             yield return null;
         }
 
-       //정지
+        //정지
         aniHandler?.Move(Vector2.zero);
     }
 
@@ -81,4 +91,39 @@ public class Unit : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, followRange);
     }
+
+
+    private void SettingScore(UnitType type)
+    {
+        switch (type)
+        {
+            case UnitType.Angle:
+                unitScore = 100;
+                break;
+            case UnitType.BigZombie:
+                unitScore = 200;
+                break;
+            case UnitType.Lizard:
+                unitScore = 50;
+                break;
+            case UnitType.Boom:
+                unitScore = -300; //음수
+                break;
+
+        }
+
+    }
+
+
+    // Unit.cs 안에서
+    void OnDestroy()
+    {
+        //근데 이건 삭제를 할때 호출하는거 아닌가? 
+        UnitSpawner spawner = FindObjectOfType<UnitSpawner>();
+        if (spawner != null)
+        {
+            spawner.UnregisterUnit(transform.position);
+        }
+    }
+
 }

@@ -51,7 +51,7 @@ public class Unit : MonoBehaviour
         {
             StopCoroutine(followCoroutine);
         }
-
+        GetComponent<Collider2D>().enabled = false;
         followCoroutine = StartCoroutine(FollowRoutine(targetTransform));
     }
 

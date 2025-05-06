@@ -13,7 +13,7 @@ public class UnitListManager : MonoBehaviour
     List<GameObject> unitList = new List<GameObject>();
     // Start is called before the first frame update
 
-
+    public GameObject TextUI;
 
 
     void Start()
@@ -25,7 +25,10 @@ public class UnitListManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (unitList.Count > ListSize)
+        {
+            GameOver();
+        }
     }
 
    public void Interact(GameObject obj)
@@ -34,7 +37,7 @@ public class UnitListManager : MonoBehaviour
     if (unit == null) return;
 
 
-    GameManager.instance.AddScore(unit.UnitScore); //점수를 넣어준다. 어떤 것이든 점수는 넣어줄것이다. 
+        FriendGameManager.instance.AddScore(unit.UnitScore); //점수를 넣어준다. 어떤 것이든 점수는 넣어줄것이다. 
     // Boom 유닛 처리
     if (unit.UType == UnitType.Boom)
     {
@@ -76,7 +79,8 @@ public class UnitListManager : MonoBehaviour
     {
         if (unitList.Count > ListSize)
         {
-            Debug.Log("게임종료");
+            Time.timeScale = 0;
+            TextUI.SetActive(true);
         }
     }
 
@@ -120,7 +124,7 @@ public class UnitListManager : MonoBehaviour
                 unitList.RemoveAt(removeIndex);
             }
 
-            GameManager.instance.AddScore(scoresum);
+            FriendGameManager.instance.AddScore(scoresum);
             
             // 제거 후 다시 처음부터 검사
             MatchRecursive(0);

@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
-public class GameManager : MonoBehaviour
+public class FriendGameManager : MonoBehaviour
 {
 
     //싱글톤 사용
-    public static GameManager instance;
+    public static FriendGameManager instance;
 
    
     void Awake()
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 0;
         bestScore = PlayerPrefs.GetInt(BestScoreKey,0);
     }
     [SerializeField]private int score;
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI scoreText;
+
 
 
     void Update()
@@ -68,6 +71,11 @@ public class GameManager : MonoBehaviour
         }
 
 
+    }
+
+    public void StartGame()
+    {
+        Time.timeScale = 1;
     }
 
 

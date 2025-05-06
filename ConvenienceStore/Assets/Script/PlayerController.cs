@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.U2D;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,7 +25,11 @@ public class PlayerController : MonoBehaviour
     private UnitListManager listManager;
 
     private AnimationHandler anihandler;
-    
+
+
+    private bool isConnect = false;
+    private GameObject? target; //nullable 선언
+
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -40,6 +47,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (isConnect&& Input.GetKeyDown(KeyCode.E))
+        {
+            listManager.Interact(target); //��ȣ�ۿ�
+        }
         Movement();
     }
 
@@ -61,14 +72,16 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+       
             if (collision.CompareTag("Unit"))
-            { 
-                listManager.Interact(collision.gameObject); //��ȣ�ۿ�
-                
+            {
+            target = collision.gameObject;
+            
+             isConnect = true;
+
+
             }
 
             if(collision.CompareTag("Door"))
@@ -76,6 +89,30 @@ public class PlayerController : MonoBehaviour
                 collision.GetComponent<Door>().Open();
 
             }
+
+          if (collision.CompareTag("NPC"))
+          {
+           collision.GetComponent<ToggleUI>().TextON();
+          }
+       
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Unit"))
+        {
+            target = null;
+            isConnect = false;
+        }
+
+        if (collision.CompareTag("NPC"))
+        {
+            collision.GetComponent<ToggleUI>().TextOff();
+        }
+
+        if (collision.CompareTag("Door"))
+        {
+            collision.GetComponent<Door>().DoorClose();
         }
     }
 

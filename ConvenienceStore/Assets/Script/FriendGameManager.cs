@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class FriendGameManager : MonoBehaviour
 {
@@ -25,7 +27,7 @@ public class FriendGameManager : MonoBehaviour
     [SerializeField]
     private GameObject MenuUI;
 
-
+    public PlayerController player;
 
     void Awake()
     {
@@ -33,6 +35,10 @@ public class FriendGameManager : MonoBehaviour
         {
 
             instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -42,6 +48,19 @@ public class FriendGameManager : MonoBehaviour
         bestScore = PlayerPrefs.GetInt(FBestScoreKey, 0);
         BestScoreText.text = bestScore.ToString();
         score = 0;
+
+        if (SceneManager.GetActiveScene().name != "MainScene")
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene("MainScene");
+        }
+        else
+        {
+            MenuUI.SetActive(true);
+            Time.timeScale = 1;
+            score = 0;
+        }
+
     }
   
 
@@ -87,6 +106,8 @@ public class FriendGameManager : MonoBehaviour
     public void StartGame()
     {
         Time.timeScale = 1;
+        MenuUI.SetActive(false);  // 메뉴만 꺼주기
+        score = 0;
     }
     public void GameOver()
     {
@@ -94,7 +115,9 @@ public class FriendGameManager : MonoBehaviour
         UpdateScore();
         MenuUI.SetActive(true);
         Time.timeScale = 0;
-        
+        player.GetComponent<UnitListManager>().ClearUnits();
+
+
     }
 
 

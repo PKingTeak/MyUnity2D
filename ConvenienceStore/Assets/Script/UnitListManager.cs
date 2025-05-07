@@ -113,7 +113,7 @@ public class UnitListManager : MonoBehaviour
         if (matchIndices.Count >= 3)
         {
             Debug.Log($"{currentType} 타입 {matchIndices.Count}개 매칭 → 제거");
-            int scoresum =0;
+            
             // 뒤에서부터 제거
             for (int i = matchIndices.Count - 1; i >= 0; i--)
             {
@@ -122,7 +122,7 @@ public class UnitListManager : MonoBehaviour
                 unitList.RemoveAt(removeIndex);
             }
 
-            FriendGameManager.instance.AddScore(scoresum);
+            FriendGameManager.instance.AddScore(300);
             
             // 제거 후 다시 처음부터 검사
             MatchRecursive(0);
@@ -132,6 +132,19 @@ public class UnitListManager : MonoBehaviour
             // 다음 인덱스로 이동
             MatchRecursive(index + 1);
         }
+    }
+
+    public void ClearUnits()
+    {
+        foreach (GameObject unit in unitList)
+        {
+            if (unit != null)
+            {
+                Destroy(unit);
+            }
+        }
+
+        unitList.Clear();
     }
 
 

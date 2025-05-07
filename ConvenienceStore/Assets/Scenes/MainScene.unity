@@ -2576,7 +2576,8 @@ MonoBehaviour:
   score: 0
   bestScore: 0
   scoreText: {fileID: 237204900}
-  MenuUI: {fileID: 0}
+  MenuUI: {fileID: 411292654}
+  player: {fileID: 1853488049}
 --- !u!4 &203448810
 Transform:
   m_ObjectHideFlags: 0
@@ -3495,6 +3496,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Potal, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
 --- !u!114 &1013452358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5434,6 +5447,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1804570372}
   m_CullTransparentMesh: 1
+--- !u!114 &1853488049 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 909097922214344903, guid: 26b60a55461444c0a9de2bf951c5f3c7, type: 3}
+  m_PrefabInstance: {fileID: 4617337601469374060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 099b7eaffe9b747478ffb06dead24fb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4617337601469374060
 PrefabInstance:
   m_ObjectHideFlags: 0

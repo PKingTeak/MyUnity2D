@@ -8,6 +8,7 @@ TagManager:
   - Door
   - BackGround
   - NPC
+  - Potal
   layers:
   - Default
   - TransparentFX

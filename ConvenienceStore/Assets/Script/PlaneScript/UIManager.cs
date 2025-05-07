@@ -1,23 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI restartText;
+
+
+    public GameObject StartButton;
+    public GameObject menuUI;
+
+    public TextMeshProUGUI BestScore;
+    private int bestscore;
+    private static readonly string PlaneBestScorekey = "PlaneBestScore";
 
     private void Start()
     {
         if (scoreText == null)
             Debug.LogError("score text is null");
-
-        if (restartText == null)
-            Debug.LogError("restart text is null");
-
-
-        restartText.gameObject.SetActive(false);
+        bestscore = PlayerPrefs.GetInt(PlaneBestScorekey);
+        BestScore.text = bestscore.ToString();
+        if (StartButton.activeSelf == false)
+        { 
+        StartButton.SetActive(true);
+        }
     }
 
     public void UpdateScore(int score)
@@ -25,7 +33,19 @@ public class UIManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
     public void SetRestart()
-    { 
-      restartText.gameObject.SetActive(true);  
+    {
+        menuUI.SetActive(true);
+
+    }
+
+    public void UpdateBestScore(int score)
+    {
+        if (bestscore < score)
+        {
+            bestscore = score;
+            PlayerPrefs.SetInt(PlaneBestScorekey, bestscore);
+            PlayerPrefs.Save();
+        }
+            BestScore.text = bestscore.ToString();
     }
 }

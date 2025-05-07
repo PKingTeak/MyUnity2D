@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     float deathCooldown = 1.0f; // 죽음 공간에 머물면 일정 시간이후 사망하는 것
     bool isFlap = false ; //점프를 했는지 확인
     public bool godMode = false;  //디버그 용으로 사용할 것이다. 
-
+    GameObject StartButton;
+  
 
     //GameManager gameManager;
     
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.R))
                 {
                     PlaneGameManager.Instance.RestartGame();
+                   
                 }
             }
             else

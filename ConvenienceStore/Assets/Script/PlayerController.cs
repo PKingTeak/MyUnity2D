@@ -11,10 +11,10 @@ public class PlayerController : MonoBehaviour
 {
     private SpriteRenderer sprite;
     private Rigidbody2D rigid;
-    
+
     [SerializeField] private Transform weaponPivot;
 
-    [SerializeField][Range(0,30)] private float moveSpeed;
+    [SerializeField][Range(0, 30)] private float moveSpeed;
     private Vector2 movedir;
 
     private Camera cam;
@@ -30,24 +30,36 @@ public class PlayerController : MonoBehaviour
     private bool isConnect = false;
     private GameObject? target; //nullable 선언
 
+
+
     private void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
+        cam = Camera.main;
+        if (rigid == null)
+        {
+            rigid = GetComponent<Rigidbody2D>();
+        }
+
         sprite = GetComponentInChildren<SpriteRenderer>();
         listManager = GetComponent<UnitListManager>();
         anihandler = GetComponentInChildren<AnimationHandler>();
-        cam = Camera.main;    
+
     }
 
     private void FixedUpdate()
     {
+        Debug.Log("속도체크");
+        Debug.Log(moveSpeed);
+        
         rigid.velocity = movedir * moveSpeed;
+        Debug.Log(rigid.velocity);
+
     }
 
 
     private void Update()
     {
-        if (isConnect&& Input.GetKeyDown(KeyCode.E))
+        if (isConnect && Input.GetKeyDown(KeyCode.E))
         {
             listManager.Interact(target); //��ȣ�ۿ�
         }
@@ -74,27 +86,32 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
-            if (collision.CompareTag("Unit"))
-            {
+
+        if (collision.CompareTag("Unit"))
+        {
             target = collision.gameObject;
-            
-             isConnect = true;
+
+            isConnect = true;
 
 
-            }
+        }
 
-            if(collision.CompareTag("Door"))
-            {
-                collision.GetComponent<Door>().Open();
+        if (collision.CompareTag("Door"))
+        {
+            collision.GetComponent<Door>().Open();
 
-            }
+        }
 
-          if (collision.CompareTag("NPC"))
-          {
-           collision.GetComponent<ToggleUI>().TextON();
-          }
-       
+        if (collision.CompareTag("NPC"))
+        {
+            collision.GetComponent<ToggleUI>().TextON();
+        }
+
+        if (collision.CompareTag("Potal"))
+        {
+            collision.GetComponent<Potal>().ChangeScene();
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)

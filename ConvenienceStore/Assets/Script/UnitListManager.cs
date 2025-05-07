@@ -9,11 +9,9 @@ public class UnitListManager : MonoBehaviour
 
     private Transform player;
 
-    [SerializeField]
-    List<GameObject> unitList = new List<GameObject>();
-    // Start is called before the first frame update
 
-    public GameObject TextUI;
+    private List<GameObject> unitList = new List<GameObject>();
+    // Start is called before the first frame update
 
 
     void Start()
@@ -79,8 +77,8 @@ public class UnitListManager : MonoBehaviour
     {
         if (unitList.Count > ListSize)
         {
-            Time.timeScale = 0;
-            TextUI.SetActive(true);
+            FriendGameManager.instance.GameOver();
+           
         }
     }
 

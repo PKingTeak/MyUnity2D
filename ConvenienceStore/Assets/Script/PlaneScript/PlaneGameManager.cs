@@ -15,11 +15,19 @@ public class PlaneGameManager : MonoBehaviour
     public static PlaneGameManager Instance { get { return instance; } }
 
 
+    public GameObject MenuUI;
+
     //점수 저장
     public static readonly string PlaneBestScore;
 
     private int planeBestScore;
-    
+
+    private void Start()
+    {
+        Time.timeScale = 0;
+
+    }
+
     private void Awake()
     {
         instance = this;
@@ -29,7 +37,7 @@ public class PlaneGameManager : MonoBehaviour
 
    public void GameOver()
     {
-
+        uiManger.UpdateBestScore(curscore);
         uiManger.SetRestart();
         Debug.Log("게임 오버");
     }
@@ -57,6 +65,11 @@ public class PlaneGameManager : MonoBehaviour
             PlayerPrefs.SetInt(PlaneBestScore, curscore);
         }
         
+    }
+
+    public void GameStart()
+    {
+        Time.timeScale = 1;
     }
 
     

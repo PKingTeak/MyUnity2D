@@ -8,7 +8,7 @@ public class MainScoreObject : MonoBehaviour
     public TextMeshProUGUI PlaneBestScore;
     public TextMeshProUGUI FriendBestScore;
 
-    private static readonly string PlaneBestScoreKey = "PlaneBeskScore";
+    private static readonly string PlaneBestScoreKey = "PlaneBestScore";
     private static readonly string FriendBestScoreKey = "FriendBestScore";
 
     private int planescore;

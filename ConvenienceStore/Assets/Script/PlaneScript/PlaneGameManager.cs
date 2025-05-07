@@ -18,7 +18,7 @@ public class PlaneGameManager : MonoBehaviour
     public GameObject MenuUI;
 
     //점수 저장
-    public static readonly string PlaneBestScore;
+    public static readonly string PlaneBestScore = "PlaneBestScore";
 
     private int planeBestScore;
 
